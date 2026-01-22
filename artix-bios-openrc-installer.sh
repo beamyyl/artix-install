@@ -5,18 +5,12 @@
 #!/bin/bash
 set -e
 
-# Fix the clock first to avoid SSL errors
-echo ">>> Syncing time..."
-# Using standard date sync if ntpdate isn't there
-ntpdate -u pool.ntp.org || echo "Time sync failed, check manually"
-
-echo ">>> Ensure your root partition is marked as 'Bootable' and mounted to /mnt."
+echo ">>> Ensure root is mounted to /mnt and marked bootable."
 sleep 3
 
-# 1. Install Base System
-# We explicitly add elogind-openrc and netifrc to prevent the dinit conflict
+# 1. Install Base System (Explicitly avoiding dinit conflict)
 echo ">>> Installing base system with basestrap..."
-basestrap /mnt base base-devel openrc elogind-openrc netifrc linux linux-firmware
+basestrap /mnt base base-devel openrc elogind-openrc linux linux-firmware
 
 # 2. Generating FSTAB
 echo ">>> Generating fstab..."
@@ -24,29 +18,28 @@ fstabgen -U /mnt >> /mnt/etc/fstab
 
 # 3. Enter chroot
 artix-chroot /mnt /bin/bash <<'EOF'
-export PS1="(artix) ${PS1}"
+export PS1="(artix-bios) ${PS1}"
 
-# Localization
+# Localization & Clock
+ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "artix" > /etc/hostname
+echo "hostname='artix'" > /etc/conf.d/hostname
 
 # Networking & Utilities
-# Added netifrc which is required for OpenRC networking
 pacman -S --noconfirm networkmanager-openrc connman-openrc vim nano cronie-openrc
 rc-update add NetworkManager default
 rc-update add cronie default
 
 # ----------------------------------------------------------
-# Bootloader
+# Bootloader (BIOS)
 # ----------------------------------------------------------
 pacman -S --noconfirm grub
-
-grub-install \
-  --target=i386-pc \
-  /dev/sda
-
+# Targeting the disk (e.g., /dev/sda) as per Wiki
+grub-install --recheck /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 EOF
 
