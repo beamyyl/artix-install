@@ -5,6 +5,7 @@
 #!/bin/bash
 set -e
 
+echo "ParallelDownloads = 5" >> /etc/pacman.conf
 echo ">>> Ensure disks are mounted to /mnt and /mnt/boot/efi."
 sleep 3
 
