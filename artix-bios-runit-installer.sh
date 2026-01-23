@@ -8,6 +8,7 @@ set -e
 echo ">>> Ensure root is mounted to /mnt."
 sleep 3
 
+echo "ParallelDownloads = 5" >> /etc/pacman.conf
 basestrap /mnt base base-devel runit elogind-runit linux linux-firmware
 fstabgen -U /mnt >> /mnt/etc/fstab
 
