@@ -20,6 +20,11 @@ fstabgen -U /mnt >> /mnt/etc/fstab
 artix-chroot /mnt /bin/bash <<'EOF'
 export PS1="(artix-bios) ${PS1}"
 
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.bak
+rankmirrors -n 5 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
+pacman -Syy
+
 # Localization & Clock
 ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 hwclock --systohc
