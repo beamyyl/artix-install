@@ -16,13 +16,15 @@ basestrap /mnt base base-devel openrc elogind-openrc linux linux-firmware
 echo ">>> Generating fstab..."
 fstabgen -U /mnt >> /mnt/etc/fstab
 
+
+cp /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
+sed -i 's/^#Server/Server/' /mnt/etc/pacman.d/mirrorlist.bak
+rankmirrors -n 5 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
+
 # 3. Enter chroot
 artix-chroot /mnt /bin/bash <<'EOF'
 export PS1="(artix-bios) ${PS1}"
 
-cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.bak
-rankmirrors -n 5 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
 pacman -Syy
 
 # Localization & Clock
