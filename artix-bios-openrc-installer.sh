@@ -6,12 +6,17 @@ set -e
 # This is the BIOS/MBR installer.
 # ----------------------------------------------------------
 
-echo ">>> Ensure your root partition is marked as 'Bootable' and that its mounted to /mnt."
+echo ">>> Ensure your root partition is marked as 'Bootable' in fdisk/cfdisk and that its mounted to /mnt."
 sleep 3
 
 # ----------------------------------------------------------
 # Install Base System
 # ----------------------------------------------------------
+# Sync clock to fix SSL certificate errors
+echo ">>> Synchronizing system clock..."
+rc-service ntpd start || true
+hwclock --systohc
+
 # Enable parallel downloads for the Live ISO environment
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
 
