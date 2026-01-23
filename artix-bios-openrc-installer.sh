@@ -12,16 +12,15 @@ sleep 3
 # ----------------------------------------------------------
 # Install Base System
 # ----------------------------------------------------------
-# Sync clock to fix SSL certificate errors
+# Update the system clock to avoid SSL certificate errors
 echo ">>> Synchronizing system clock..."
 rc-service ntpd start || true
-hwclock --systohc
 
 # Enable parallel downloads for the Live ISO environment
 sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
 
-echo ">>> Installing Artix base and OpenRC..."
-basestrap /mnt base base-devel openrc-devel
+echo ">>> Installing Artix base, base-devel, and OpenRC..."
+basestrap /mnt base base-devel openrc elogind-openrc
 
 echo ">>> Installing Kernel and Firmware..."
 basestrap /mnt linux linux-firmware
@@ -44,12 +43,15 @@ fstabgen -U /mnt > /mnt/etc/fstab
 # Enter Chroot
 # ----------------------------------------------------------
 artix-chroot /mnt /bin/bash <<'EOF'
+# Configure the system clock
+hwclock --systohc
+
 # Syncing
 pacman -Sy
 
 # System Essentials
 echo "artix" > /etc/hostname
-pacman -S --noconfirm elogind-openrc dbus-openrc
+pacman -S --noconfirm dbus-openrc
 rc-update add elogind default
 rc-update add dbus default
 
@@ -64,7 +66,7 @@ pacman -S --noconfirm grub
 
 # Install to the Master Boot Record of the drive
 # Ensure /dev/sda is your correct VM disk
-grub-install --target=i386-pc /dev/sda
+grub-install --recheck /dev/sda
 
 # Generate the config
 grub-mkconfig -o /boot/grub/grub.cfg
