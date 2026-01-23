@@ -10,16 +10,12 @@ sleep 3
 
 # 1. Install Base System (Explicitly avoiding dinit conflict)
 echo ">>> Installing base system with basestrap..."
+echo "ParallelDownloads = 5" >> /etc/pacman.conf
 basestrap /mnt base base-devel openrc elogind-openrc linux linux-firmware
 
 # 2. Generating FSTAB
 echo ">>> Generating fstab..."
 fstabgen -U /mnt >> /mnt/etc/fstab
-
-
-cp /mnt/etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist.bak
-sed -i 's/^#Server/Server/' /mnt/etc/pacman.d/mirrorlist.bak
-rankmirrors -n 5 /mnt/etc/pacman.d/mirrorlist.bak > /mnt/etc/pacman.d/mirrorlist
 
 # 3. Enter chroot
 artix-chroot /mnt /bin/bash <<'EOF'
