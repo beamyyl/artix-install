@@ -61,6 +61,10 @@ touch /etc/s6/adminsv/default/contents.d/dbus
 touch /etc/s6/adminsv/default/contents.d/elogind
 touch /etc/s6/adminsv/default/contents.d/NetworkManager
 touch /etc/s6/adminsv/default/contents.d/cronie
+s6-db-reload && s6-rc -u change dbus
+s6-db-reload && s6-rc -u change elogind
+s6-db-reload && s6-rc -u change NetworkManager
+s6-db-reload && s6-rc -u change cronie
 
 # ----------------------------------------------------------
 # GRUB for UEFI
