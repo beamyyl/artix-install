@@ -5,6 +5,7 @@
 #!/bin/bash
 set -e
 
+echo "ParallelDownloads = 5" >> /etc/pacman.conf
 basestrap /mnt base base-devel s6-base elogind-s6 linux linux-firmware
 fstabgen -U /mnt >> /mnt/etc/fstab
 
