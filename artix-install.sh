@@ -136,7 +136,7 @@ info "============================================================"
 echo ""
 
 info "Installing the kernel, base, and $INIT_SYSTEM..."
-basestrap /mnt linux linux-firmware base base-devel "${INIT_SYSTEM}" "elogind-${INIT_SYSTEM}"
+basestrap /mnt linux linux-firmware sof-firmware base base-devel "${INIT_SYSTEM}" "elogind-${INIT_SYSTEM}"
 
 # =============================================================================
 # fstab
