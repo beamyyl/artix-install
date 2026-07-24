@@ -135,9 +135,6 @@ info " BASE INSTALL"
 info "============================================================"
 echo ""
 
-rc-service ntpd start || true
-sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/' /etc/pacman.conf
-
 info "Installing base, base-devel, $INIT_SYSTEM..."
 basestrap /mnt base base-devel "${INIT_SYSTEM}" "elogind-${INIT_SYSTEM}"
 
