@@ -256,8 +256,8 @@ if [ "\${CREATE_USER}" = "y" ]; then
     if [ -z "\${NEW_USER}" ]; then
         warn "No username entered — skipping user creation."
     else
-        useradd -m -G wheel,audio,video -s /bin/bash "\${NEW_USER}"
-        info "User '\${NEW_USER}' created and added to: wheel, audio, video."
+        useradd -m -G wheel,audio,video,input -s /bin/bash "\${NEW_USER}"
+        info "User '\${NEW_USER}' created and added to: wheel, audio, video, input"
         info "Set a password for '\${NEW_USER}':"
         passwd "\${NEW_USER}"
         info "User setup complete."
