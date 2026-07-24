@@ -135,14 +135,8 @@ info " BASE INSTALL"
 info "============================================================"
 echo ""
 
-info "Installing base, base-devel, $INIT_SYSTEM..."
-basestrap /mnt base base-devel "${INIT_SYSTEM}" "elogind-${INIT_SYSTEM}"
-
-info "Installing kernel and firmware..."
-basestrap /mnt linux linux-firmware
-
-cp --dereference /etc/resolv.conf /mnt/etc/
-sed -i 's/#ParallelDownloads = 5/ParallelDownloads = 5/' /mnt/etc/pacman.conf
+info "Installing the kernel, base, and $INIT_SYSTEM..."
+basestrap /mnt linux linux-firmware base base-devel "${INIT_SYSTEM}" "elogind-${INIT_SYSTEM}"
 
 # =============================================================================
 # fstab
