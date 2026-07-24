@@ -226,7 +226,7 @@ info "Installing GRUB..."
 
 if [ "\${BOOT_MODE}" = "uefi" ]; then
     pacman -S --noconfirm grub efibootmgr
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --removable
+    grub-install --target=x86_64-efi --efi-directory=/boot/efi
 else
     pacman -S --noconfirm grub
     grub-install --recheck "\${GRUB_DISK}"
