@@ -233,6 +233,9 @@ if [ "\${CREATE_USER}" = "y" ]; then
         info "User '\${NEW_USER}' created and added to: wheel, audio, video, input"
         info "Set a password for '\${NEW_USER}':"
         passwd "\${NEW_USER}"
+        mkdir -p /etc/sudoers.d
+        echo '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/10-wheel
+        chmod 0440 /etc/sudoers.d/10-wheel
         info "User setup complete."
     fi
 else
